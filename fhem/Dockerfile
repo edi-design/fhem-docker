@@ -70,7 +70,16 @@ libtext-csv-perl \
 libtext-diff-perl \
 libtimedate-perl \
 libwww-perl \
-libxml-simple-perl
+libxml-simple-perl \
+libmath-round-perl \
+libxml-parser-lite-perl \
+libsoap-lite-perl
+
+# install CPAN dependencies
+## needed for XiaomiGateway: https://github.com/T0RST3N/fhem-XiaomiSmartHome
+RUN cpan Net::Ping
+RUN cpan Crypt::CBC
+
 
 # Install fhem
 RUN echo Europe/Berlin > /etc/timezone && dpkg-reconfigure tzdata
