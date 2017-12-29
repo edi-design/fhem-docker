@@ -3,6 +3,8 @@ version: '2'
 services:
     fhem:
         restart: always
+        hostname: fhem
+        domainname: docker.local
         expose:
             - "8083"
             - "7072"
@@ -13,11 +15,29 @@ services:
         privileged: true
         volumes:
             - ./fhem/core/:/opt/fhem/
+            # used to communicate between fhem and motion-eye
+            # @TODO find better solution
+            - ../../share/:/opt/share/
         networks:
             - fhem-network
         depends_on:
             - "mysql"
             - "mqtt"
+
+    sonos:
+        restart: always
+        hostname: sonos-fhem
+        domainname: docker.local
+        expose:
+            - "4711"
+        ports:
+            - "4711:4711"
+        build: sonos
+        volumes:
+            - ./fhem/core/:/opt/fhem/ 
+        network_mode: "host"
+        depends_on:
+            - "fhem"
 
     homebridge:
         restart: always
@@ -45,6 +65,8 @@ services:
 
     mysql:
         restart: always
+        hostname: mysql-fhem
+        domainname: docker.local
         expose:
             - "3306"
             - "33060"
@@ -89,6 +111,20 @@ services:
             - fhem-network
         depends_on:
             - "mqtt"
+
+    collectord:
+        restart: always
+        hostname: collectord-fhem
+        domainname: docker.local
+        expose:
+            - "5222"
+        ports:
+            - "5222:5222"
+        build: collectord
+        volumes:
+            - ./collectord/config/:/opt/collectord/
+        networks:
+            - fhem-network
 
 networks:
     fhem-network:
