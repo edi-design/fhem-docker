@@ -21,6 +21,7 @@ RUN echo Europe/Berlin > /etc/timezone && dpkg-reconfigure tzdata
 # install collectord
 RUN wget https://svn.fhem.de/trac/export/HEAD/trunk/fhem/contrib/PRESENCE/deb/collectord-${COLLECTORD_VERSION}.deb && dpkg -i collectord-${COLLECTORD_VERSION}.deb
 RUN service collectord stop
+RUN rm /etc/init.d/collectord
 
 WORKDIR "/opt/collectord"
 
